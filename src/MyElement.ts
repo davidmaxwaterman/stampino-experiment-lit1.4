@@ -1,4 +1,5 @@
-import { html, css, LitElement, property } from 'lit-element';
+import { html, css, LitElement } from 'lit';
+import { property } from 'lit/decorators.js';
 
 export class MyElement extends LitElement {
   static styles = css`
@@ -15,6 +16,17 @@ export class MyElement extends LitElement {
 
   __increment() {
     this.counter += 1;
+
+    console.log('DISPATCH counter-changed');
+    this.dispatchEvent(
+      new CustomEvent('counter-changed', {
+        bubbles: true,
+        composed: true,
+        detail: {
+          counter: this.counter,
+        },
+      })
+    );
   }
 
   render() {

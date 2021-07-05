@@ -11,26 +11,48 @@
 <body>
   <div id="demo"></div>
 
-  <my-element title="testing"></my-element>
-
   <template id="demo-template">
-    <my-element title="{{title}}">
+    <my-element
+      title="{{title}}"
+      @counter-changed="{{onCounterChanged}}"
+      >
       some more light-dom
     </my-element>
   </template>
 
   <script type="module">
-    import { html, render } from 'lit-html';
-    import * as stampino from 'stampino';
+    import { html, render } from 'lit';
+    import * as stampino from "stampino";
     import '../dist/my-element.js';
 
-    const title = 'Hello owc World!';
+    const templateElement = document.querySelector('#demo-template');
 
-    const templateElement = document.querySelector(`#demo-template`);
     const myTemplate = stampino.prepareTemplate(templateElement);
-    const litTemplate = myTemplate({ title });
+
+    const onCounterChanged = (event) => {
+      const { counter } = event.detail;
+      console.log('ON COUNTER CHANGED', counter);
+    };
+
+    const title = 'Hello owc World!';
     render(
-      litTemplate,
+      myTemplate({
+        title,
+        onCounterChanged,
+      }),
+      /*
+      */
+      /* - the following works, but the above does not */
+      /*
+      html`
+        <my-element
+          title="${title}"
+          @counter-changed="${onCounterChanged}"
+          >
+          some more light-dom
+        </my-element>
+      `,
+      */
       document.querySelector('#demo')
     );
   </script>
